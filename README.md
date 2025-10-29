@@ -27,7 +27,7 @@ A React-based app to discover and save books using Open Library API and json-ser
 ```bash
 npm install
 npm run dev
-npm run start-server
+npm run server
 
 ```
 
