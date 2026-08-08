@@ -11,6 +11,7 @@ import {
   ListGroup,
 } from 'react-bootstrap';
 import ErrorPage from './ErrorPage';
+const BASE_URL = '/api';
 
 function BookDetails() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ function BookDetails() {
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/books/${id}`);
+        const response = await axios.get(`${BASE_URL}/books/${id}`);
         setBook(response.data);
       } catch (error) {
         console.error('Error fetching book details:', error);
@@ -39,7 +40,7 @@ function BookDetails() {
 
     try {
       const updatedComments = [...(book.comments || []), newComment];
-      await axios.patch(`http://localhost:3001/books/${id}`, {
+      await axios.patch(`${BASE_URL}/books/${id}`, {
         comments: updatedComments,
       });
 
@@ -52,9 +53,9 @@ function BookDetails() {
 
   if (loading) {
     return (
-      <Container className="text-center mt-5">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-3">Loading...</p>
+      <Container className='text-center mt-5'>
+        <Spinner animation='border' variant='primary' />
+        <p className='mt-3'>Loading...</p>
       </Container>
     );
   }
@@ -64,24 +65,24 @@ function BookDetails() {
   }
 
   return (
-    <Container className="mt-5">
-      <Card className="text-center">
+    <Container className='mt-5'>
+      <Card className='text-center'>
         {book.coverImage && (
           <Card.Img
-            variant="top"
+            variant='top'
             src={book.image}
             style={{ height: '300px', objectFit: 'cover' }}
           />
         )}
         <Card.Body>
-          <Card.Title className="fs-1">{book.title}</Card.Title>
-          <Card.Text className="fs-4">{book.description}</Card.Text>
+          <Card.Title className='fs-1'>{book.title}</Card.Title>
+          <Card.Text className='fs-4'>{book.description}</Card.Text>
 
           <hr />
 
-          <h5 className="mb-3">Comments</h5>
+          <h5 className='mb-3'>Comments</h5>
           {book.comments && book.comments.length > 0 ? (
-            <ListGroup className="mb-3">
+            <ListGroup className='mb-3'>
               {book.comments.map((comment, index) => (
                 <ListGroup.Item key={index}>{comment}</ListGroup.Item>
               ))}
@@ -89,20 +90,20 @@ function BookDetails() {
           ) : (
             <p>No comments yet.</p>
           )}
-          <Form onSubmit={handleAddComment} className="mb-3">
-            <Form.Group controlId="comment" className="mb-3">
+          <Form onSubmit={handleAddComment} className='mb-3'>
+            <Form.Group controlId='comment' className='mb-3'>
               <Form.Control
-                type="text"
-                placeholder="write your comment..."
+                type='text'
+                placeholder='write your comment...'
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant='primary' type='submit'>
               Add Comment
             </Button>
           </Form>
-          <Button variant="primary" onClick={() => navigate(-1)}>
+          <Button variant='primary' onClick={() => navigate(-1)}>
             Go Back
           </Button>
         </Card.Body>

@@ -10,6 +10,7 @@ import {
   Spinner,
   Form,
 } from 'react-bootstrap';
+const BASE_URL = '/api';
 
 function DiscoverBook() {
   const [query, setQuery] = useState('javascript');
@@ -29,7 +30,7 @@ function DiscoverBook() {
 
   const fetchSavedBooks = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/books');
+      const response = await axios.get(`${BASE_URL}/books`);
       setSavedBooks(response.data);
     } catch (error) {
       console.error('Error fetching saved books', error);
@@ -42,7 +43,7 @@ function DiscoverBook() {
       setTimeout(async () => {
         try {
           const response = await axios.get(
-            `https://openlibrary.org/search.json?q=${query}`
+            `https://openlibrary.org/search.json?q=${query}`,
           );
           setBooks(response.data.docs.slice(0, 12));
         } catch (error) {
@@ -50,7 +51,7 @@ function DiscoverBook() {
         } finally {
           setLoading(false);
         }
-      }, 1000);
+      }, 500);
     };
 
     fetchSavedBooks();
@@ -61,7 +62,7 @@ function DiscoverBook() {
     const alreadySaved = savedBooks.some(
       (saved) =>
         saved.title === book.title &&
-        saved.author.includes(book.author_name ? book.author_name[0] : '')
+        saved.author.includes(book.author_name ? book.author_name[0] : ''),
     );
 
     if (alreadySaved) {
@@ -71,12 +72,12 @@ function DiscoverBook() {
     const newBook = {
       title: book.title || 'No Title',
       author: book.author_name ? book.author_name.join(', ') : 'Unknown Author',
-      schortDesc: book.ia_collection_s || 'Imported from Open Library',
+      shortDesc: book.ia_collection_s || 'Imported from Open Library',
       description: book.first_sentence
         ? typeof book.first_sentence === 'string'
           ? book.first_sentence
           : book.first_sentence.join(' ')
-        : 'No description avalable',
+        : 'No description available',
       image: book.cover_i
         ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
         : '',
@@ -85,7 +86,7 @@ function DiscoverBook() {
     };
 
     try {
-      await axios.post('http://localhost:3001/books', newBook);
+      await axios.post(`${BASE_URL}/books`, newBook);
       alert('Book saved successfully!');
       fetchSavedBooks();
     } catch (error) {
