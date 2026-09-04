@@ -1,35 +1,62 @@
-- 👋 Hi, I’m @vitalielozan
-- 👀 I’m interested in FullStack Developer
-- 🌱 I’m currently learning Frontend Developer (HTML&CSS, Javascript, React)
-
 # 📚 Book Explorer
 
-A React-based app to discover and save books using Open Library API and json-server.
+A React app for browsing a book catalog and saving discoveries from the Open Library API.
 
 ## 🚀 Features
 
-- Search books from Open Library
-- Save favorites to local server
-- Like & comment on books
-- Responsive design with React Bootstrap
+- Browse the catalog with server-side search and sorting
+- Search Open Library and save books to your favorites
+- Like books and leave comments
+- Responsive UI with React Bootstrap
 
-## 🧰 Tech Stack
+## 🧰 Tech stack
 
-- React
-- React Router DOM
+- React 19 + Vite
+- React Router
 - React Bootstrap
 - Axios
-- json-server
-- Open Library API
+- [My JSON Server](https://github.com/vitalielozan/My-Json-Server) — the REST API backing this app
+- [Open Library API](https://openlibrary.org/developers/api)
 
-## 🔧 How to Run
+## 🔧 How to run
 
 ```bash
 npm install
-npm run dev
-
+cp .env.example .env    # then fill in API_KEY
+npm run dev             # http://localhost:3000
 ```
 
-## Expanding the ESLint configuration
+Reads work without any configuration. **Writes — likes, comments, saving a book —
+need `API_KEY`** in `.env`; take it from the Render dashboard of the
+`my-json-server` service (Environment tab). Without it the app still runs, and
+every write shows a message saying the key is missing.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The key has no `VITE_` prefix on purpose: `vite.config.js` reads it in Node and
+the dev proxy attaches it as the `X-API-Key` header, so it never ends up in the
+browser bundle. Renaming it to `VITE_API_KEY` would publish it to anyone who
+opens DevTools.
+
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Dev server on port 3000, with the `/api` proxy |
+| `npm run build` | Production build into `dist/` |
+| `npm run preview` | Serves `dist/` on port 3000, with the same proxy |
+| `npm run lint` | ESLint over the repo |
+
+## 🔌 The API
+
+Requests go to `/api/...` on this app's own origin and the Vite proxy forwards
+them to the deployed service. Two collections of the API's `books` project are
+used:
+
+| Collection | Path | Contents |
+| --- | --- | --- |
+| `books` | `/api/books/books` | The curated catalog, versioned in the API's git repo |
+| `favorites` | `/api/books/favorites` | Books imported from Open Library |
+
+Search and sorting are query parameters handled by the API (`?q=`, `?_sort=`,
+`?_order=`), not filtering done in the browser.
+
+Note that the API is hosted on Render's free tier: the instance sleeps when
+idle, so the first request after a pause can take around 30 seconds, and writes
+are reset on every deploy.
