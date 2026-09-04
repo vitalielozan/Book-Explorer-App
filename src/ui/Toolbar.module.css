@@ -1,0 +1,19 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The search field takes whatever the other controls leave. */
+.search {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.trailing {
+  flex: 0 0 auto;
+  min-width: 12rem;
+}

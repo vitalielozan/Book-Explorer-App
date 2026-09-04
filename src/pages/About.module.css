@@ -1,0 +1,85 @@
+.article {
+  max-width: var(--measure);
+  padding-block: var(--s-5) var(--s-8);
+}
+
+.prose p {
+  margin-top: var(--s-4);
+  line-height: var(--lh-body);
+}
+
+.section {
+  margin-top: var(--s-7);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--rule);
+}
+
+.heading {
+  margin-bottom: var(--s-4);
+  font-size: var(--fs-xl);
+  font-weight: 500;
+  font-variation-settings: 'WONK' 1;
+}
+
+/* Each source is a row: what it holds, and where it comes from. */
+.sources {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.source {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+}
+
+.sourceName {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+
+.sourceText {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.chip {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-2xs);
+  color: var(--ink-2);
+}
+
+.code {
+  padding: 0.05em 0.3em;
+  background: var(--board);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  font-family: var(--font-text);
+  font-size: 0.9em;
+}
+
+.signoff {
+  margin-top: var(--s-7);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 40rem) {
+  .source {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-2);
+  }
+}

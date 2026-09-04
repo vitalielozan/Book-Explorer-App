@@ -1,0 +1,49 @@
+.subjects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  padding-block: var(--s-4);
+}
+
+.card {
+  composes: card from '../components/BookCard.module.css';
+}
+
+.body {
+  composes: body from '../components/BookCard.module.css';
+}
+
+.title {
+  composes: title from '../components/BookCard.module.css';
+}
+
+.author {
+  composes: author from '../components/BookCard.module.css';
+}
+
+/* The year a book first appeared is the one fact worth ranking a result by. */
+.year {
+  align-self: flex-start;
+  margin-top: var(--s-1);
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  font-size: var(--fs-3xs);
+}
+
+.save {
+  margin-top: auto;
+  padding-top: var(--s-4);
+}
+
+.saved {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 0.6rem 0;
+  color: var(--bottle);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}

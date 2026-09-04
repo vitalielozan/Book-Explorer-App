@@ -1,34 +1,32 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-} from 'react-bootstrap';
-import { FaCheck, FaSearch } from 'react-icons/fa';
 
 import AsyncState from '../components/AsyncState';
+import BookGrid from '../components/BookGrid';
+import Cover from '../components/Cover';
+import Button from '../ui/Button';
+import Notice from '../ui/Notice';
+import PageHeader from '../ui/PageHeader';
+import Toolbar, { ToolbarSearch } from '../ui/Toolbar';
+import { SearchField } from '../ui/Field';
+import styles from './DiscoverBook.module.css';
 import { createItem, describeError, isCanceled, listItems } from '../api/client';
+import { spineColor } from '../lib/spine';
+import { CheckIcon } from '../ui/icons';
 
 const OPEN_LIBRARY = 'https://openlibrary.org/search.json';
 
 /** Asking for named fields keeps the response small; the default is enormous. */
 const FIELDS = 'key,title,author_name,cover_i,first_sentence,first_publish_year';
 
-const GENRES = [
-  'javascript',
-  'react',
-  'history',
-  'fantasy',
-  'romance',
-  'science',
-  'business',
+const SUBJECTS = [
+  { query: 'javascript', label: 'JavaScript' },
+  { query: 'react', label: 'React' },
+  { query: 'history', label: 'History' },
+  { query: 'fantasy', label: 'Fantasy' },
+  { query: 'romance', label: 'Romance' },
+  { query: 'science', label: 'Science' },
+  { query: 'business', label: 'Business' },
 ];
 
 const coverUrl = (coverId) =>
@@ -85,7 +83,9 @@ function DiscoverBook() {
         setSavedKeys(new Set(items.map((item) => item.sourceKey).filter(Boolean)));
       })
       .catch((err) => {
-        if (!isCanceled(err)) setNotice({ variant: 'warning', text: describeError(err) });
+        if (!isCanceled(err)) {
+          setNotice({ variant: 'warning', text: describeError(err) });
+        }
       });
 
     return () => controller.abort();
@@ -111,7 +111,7 @@ function DiscoverBook() {
         setResults(response.data.docs ?? []);
       } catch (err) {
         if (isCanceled(err)) return;
-        setError('Could not reach Open Library. Try again in a moment.');
+        setError('Open Library did not answer. Try the search again in a moment.');
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -127,11 +127,11 @@ function DiscoverBook() {
     try {
       await createItem('favorites', toFavorite(doc));
       setSavedKeys((current) => new Set(current).add(doc.key));
-      setNotice({ variant: 'success', text: `Saved "${doc.title}" to your favorites.` });
+      setNotice({ variant: 'success', text: `${doc.title} is on your shelf.` });
     } catch (err) {
       setNotice({
         variant: 'danger',
-        text: describeError(err, 'Could not save the book.'),
+        text: describeError(err, 'Could not put the book on your shelf.'),
       });
     } finally {
       setSavingKey(null);
@@ -139,102 +139,103 @@ function DiscoverBook() {
   };
 
   return (
-    <Container className='mt-5'>
-      <h2 className='text-center mb-2'>Discover Books</h2>
-      <p className='text-center text-muted mb-4'>
-        Search Open Library and save what you like to your favorites
-      </p>
+    <div className='page'>
+      <PageHeader
+        title='Discover'
+        count={loading || error ? null : `${results.length} results`}
+      >
+        Search the whole of Open Library. Anything you keep is copied onto your
+        own shelf, so the catalog stays exactly as you curated it.
+      </PageHeader>
 
-      <Form className='mb-3' onSubmit={(event) => event.preventDefault()}>
-        <InputGroup>
-          <InputGroup.Text>
-            <FaSearch />
-          </InputGroup.Text>
-          <Form.Control
-            type='search'
-            placeholder='Search by title, author or subject...'
+      <Toolbar>
+        <ToolbarSearch>
+          <SearchField
+            label='Search Open Library'
+            placeholder='Search by title, author or subject'
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            aria-label='Search Open Library'
           />
-        </InputGroup>
-      </Form>
+        </ToolbarSearch>
+      </Toolbar>
 
-      <div className='d-flex flex-wrap gap-2 mb-4'>
-        {GENRES.map((genre) => (
+      <div className={styles.subjects}>
+        {SUBJECTS.map(({ query: subject, label }) => (
           <Button
-            key={genre}
+            key={subject}
             size='sm'
-            variant={query === genre ? 'primary' : 'outline-primary'}
-            onClick={() => setSearch(genre)}
+            variant={query === subject ? 'primary' : 'secondary'}
+            onClick={() => setSearch(subject)}
+            aria-pressed={query === subject}
           >
-            {genre.charAt(0).toUpperCase() + genre.slice(1)}
+            {label}
           </Button>
         ))}
       </div>
 
       {notice && (
-        <Alert variant={notice.variant} dismissible onClose={() => setNotice(null)}>
+        <Notice variant={notice.variant} onDismiss={() => setNotice(null)}>
           {notice.text}
-        </Alert>
+        </Notice>
       )}
 
       <AsyncState
         loading={loading}
         error={error}
         isEmpty={results.length === 0}
-        emptyText='No results. Try another search.'
+        emptyText={
+          query
+            ? `Open Library has nothing for “${query}”.`
+            : 'Type a title, an author or a subject to start.'
+        }
       >
-        <Row>
+        <BookGrid>
           {results.map((doc) => {
+            const author = doc.author_name?.join(', ') || 'Unknown author';
             const alreadySaved = savedKeys.has(doc.key);
 
             return (
-              <Col key={doc.key} md={4} className='d-flex align-items-stretch mb-4'>
-                <Card className='w-100'>
-                  {doc.cover_i && (
-                    <Card.Img
-                      variant='top'
-                      src={coverUrl(doc.cover_i)}
-                      alt={`Cover of ${doc.title}`}
-                      style={{ height: '250px', objectFit: 'cover' }}
-                    />
+              <article
+                key={doc.key}
+                className={styles.card}
+                style={{ '--cloth': spineColor(doc.title || '') }}
+              >
+                <Cover
+                  src={coverUrl(doc.cover_i)}
+                  title={doc.title}
+                  author={author}
+                />
+                <div className={styles.body}>
+                  <h3 className={styles.title}>{doc.title}</h3>
+                  <p className={styles.author}>{author}</p>
+                  {doc.first_publish_year && (
+                    <span className={styles.year}>{doc.first_publish_year}</span>
                   )}
-                  <Card.Body className='d-flex flex-column'>
-                    <Card.Title>{doc.title}</Card.Title>
-                    <Card.Subtitle className='mb-2 text-muted'>
-                      {doc.author_name?.join(', ') || 'Unknown author'}
-                    </Card.Subtitle>
-                    {doc.first_publish_year && (
-                      <Badge bg='light' text='dark' className='align-self-start mb-2'>
-                        {doc.first_publish_year}
-                      </Badge>
+
+                  <div className={styles.save}>
+                    {alreadySaved ? (
+                      <p className={styles.saved}>
+                        <CheckIcon width={16} height={16} />
+                        On your shelf
+                      </p>
+                    ) : (
+                      <Button
+                        variant='primary'
+                        block
+                        disabled={savingKey === doc.key}
+                        onClick={() => save(doc)}
+                      >
+                        {savingKey === doc.key ? 'Saving' : 'Keep this book'}
+                      </Button>
                     )}
-                    <Button
-                      variant={alreadySaved ? 'outline-success' : 'success'}
-                      className='mt-auto'
-                      disabled={alreadySaved || savingKey === doc.key}
-                      onClick={() => save(doc)}
-                    >
-                      {alreadySaved ? (
-                        <>
-                          <FaCheck className='me-2' />
-                          Saved
-                        </>
-                      ) : savingKey === doc.key ? (
-                        'Saving...'
-                      ) : (
-                        'Save this Book'
-                      )}
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
+                  </div>
+                </div>
+              </article>
             );
           })}
-        </Row>
+        </BookGrid>
       </AsyncState>
-    </Container>
+    </div>
   );
 }
 

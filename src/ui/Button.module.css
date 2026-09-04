@@ -1,0 +1,82 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 0.6rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: none;
+  font-family: var(--font-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.small {
+  padding: 0.35rem 0.7rem;
+  font-size: var(--fs-2xs);
+}
+
+/* Solid cloth green: the one action that moves you forward on a screen. */
+.primary {
+  background: var(--bottle);
+  border-color: var(--bottle);
+  color: var(--board);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--bottle-deep);
+  border-color: var(--bottle-deep);
+}
+
+.secondary {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+
+.secondary:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--board);
+}
+
+.quiet {
+  padding-inline: 0;
+  color: var(--ink-2);
+}
+
+.quiet:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.danger {
+  border-color: var(--rule-strong);
+  color: var(--oxblood);
+}
+
+.danger:hover:not(:disabled) {
+  border-color: var(--oxblood);
+  background: var(--oxblood-wash);
+}
+
+/* Square icon button, sized to stay a comfortable touch target. */
+.icon {
+  padding: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+}
+
+.block {
+  width: 100%;
+}

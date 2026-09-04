@@ -1,0 +1,82 @@
+/**
+ * Bookcloth: the palette of dyed binding cloth on hardcover books.
+ *
+ * The ground is a cool paper grey rather than a cream, so the saturated cloth
+ * colours on the spines stay the only strong colour on the page. Structure is
+ * drawn with hairlines the way a spine is stamped, never with drop shadows.
+ */
+:root {
+  /* Surfaces and ink */
+  --paper: #e7e6e1;
+  --board: #f4f3f0;
+  --board-sunk: #dedcd5;
+  --ink: #23201b;
+  --ink-2: #5c574e;
+  --ink-3: #8b857a;
+  --rule: #d3d1c9;
+  --rule-strong: #b9b6ac;
+
+  /* Cloth colours: bottle green leads, oxblood marks what is loved or lost */
+  --bottle: #1f3d34;
+  --bottle-deep: #16302a;
+  --bottle-wash: #e2e7e3;
+  --oxblood: #6e2436;
+  --oxblood-wash: #f0e3e5;
+  --indigo: #2a3560;
+  --ochre: #b08430;
+  --ochre-wash: #f2ead9;
+
+  /* Foil: the hairline that marks the live thing on the page */
+  --foil: #b08430;
+
+  /* Eight cloth dyes; a title hashes onto one and keeps it everywhere. */
+  --spine-1: #1f3d34;
+  --spine-2: #6e2436;
+  --spine-3: #2a3560;
+  --spine-4: #97701f;
+  --spine-5: #24525a;
+  --spine-6: #4a2c4e;
+  --spine-7: #46561f;
+  --spine-8: #7a3b1e;
+
+  /* Type */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-text: 'Literata', 'Charter', Georgia, serif;
+
+  --fs-3xs: 0.75rem;
+  --fs-2xs: 0.8125rem;
+  --fs-xs: 0.875rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-3xl: 2.75rem;
+  --fs-hero: clamp(2.75rem, 7vw, 5rem);
+
+  /* Serif body text wants more leading than a sans would */
+  --lh-tight: 1.1;
+  --lh-snug: 1.3;
+  --lh-body: 1.65;
+
+  /* 4px scale */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+
+  /* Book boards are cut square; nothing here is a pill */
+  --r-sm: 2px;
+  --r-md: 3px;
+
+  --measure: 68ch;
+  --page: 76rem;
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 160ms;
+}

@@ -1,0 +1,128 @@
+/**
+ * A book board: bound square along the spine, rounded on the fore-edge, with a
+ * band of its own binding cloth down the bound side.
+ */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--board);
+  border: 1px solid var(--rule);
+  border-left: 6px solid var(--cloth);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  /* Keeps the cover square with the board it is bound into. */
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.card:hover,
+.card:focus-within {
+  border-top-color: var(--rule-strong);
+  border-right-color: var(--rule-strong);
+  border-bottom-color: var(--rule-strong);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-4);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+
+.title {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+}
+
+/* The whole card is the target; the title carries the accessible name. */
+.link {
+  text-decoration: none;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--foil);
+}
+
+.author {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+
+.desc {
+  flex: 1;
+  margin-top: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+}
+
+/* Sits above the card-wide link overlay so the buttons stay clickable. */
+.like,
+.remove {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+
+.like {
+  color: var(--ink-3);
+}
+
+.like:hover:not(:disabled) {
+  color: var(--oxblood);
+}
+
+.liked {
+  color: var(--oxblood);
+}
+
+.remove {
+  margin-left: auto;
+  color: var(--ink-3);
+}
+
+.remove:hover:not(:disabled) {
+  color: var(--oxblood);
+  background: var(--oxblood-wash);
+}
+
+.like:disabled,
+.remove:disabled {
+  cursor: progress;
+  opacity: 0.5;
+}

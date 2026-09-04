@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Alert,
-  Button,
-  Card,
-  Container,
-  Form,
-  ListGroup,
-  Spinner,
-} from 'react-bootstrap';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router';
 
+import AsyncState from '../components/AsyncState';
+import Cover from '../components/Cover';
 import ErrorPage from './ErrorPage';
+import Button from '../ui/Button';
+import Notice from '../ui/Notice';
+import styles from './BookDetails.module.css';
+import { TextField } from '../ui/Field';
 import { describeError, getItem, isCanceled, updateItem } from '../api/client';
+import { spineColor } from '../lib/spine';
+import { ArrowLeftIcon, HeartIcon } from '../ui/icons';
 
 /**
  * Details for one record. The same page serves both collections, so `collection`
@@ -26,7 +24,9 @@ function BookDetails({ collection = 'books' }) {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState('');
-  const [newComment, setNewComment] = useState('');
+  // A failed write keeps the page; only a failed load replaces it.
+  const [writeError, setWriteError] = useState('');
+  const [newNote, setNewNote] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -56,131 +56,141 @@ function BookDetails({ collection = 'books' }) {
     const likes = book.likes === 1 ? 0 : 1;
 
     setSaving(true);
-    setError('');
+    setWriteError('');
     try {
       await updateItem(collection, id, { likes });
       setBook((current) => ({ ...current, likes }));
     } catch (err) {
-      setError(describeError(err, 'Could not save the like.'));
+      setWriteError(describeError(err, 'Could not save the like.'));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleAddComment = async (event) => {
+  const addNote = async (event) => {
     event.preventDefault();
 
-    const comment = newComment.trim();
-    if (!comment) return;
+    const note = newNote.trim();
+    if (!note) return;
 
     // The API stores comments as a plain array, so the whole array is sent back.
-    const comments = [...(book.comments ?? []), comment];
+    const comments = [...(book.comments ?? []), note];
 
     setSaving(true);
-    setError('');
+    setWriteError('');
     try {
       await updateItem(collection, id, { comments });
       setBook((current) => ({ ...current, comments }));
-      setNewComment('');
+      setNewNote('');
     } catch (err) {
-      setError(describeError(err, 'Could not add the comment.'));
+      setWriteError(describeError(err, 'Could not add the note.'));
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
-    return (
-      <Container className='text-center mt-5'>
-        <Spinner animation='border' variant='primary' />
-        <p className='mt-3'>Loading...</p>
-      </Container>
-    );
-  }
+  if (notFound) return <ErrorPage />;
 
-  if (notFound || !book) {
-    return <ErrorPage />;
-  }
-
-  const liked = book.likes === 1;
+  const liked = book?.likes === 1;
+  const notes = book?.comments ?? [];
 
   return (
-    <Container className='mt-5 mb-5'>
-      <Card className='text-center'>
-        {book.image && (
-          <Card.Img
-            variant='top'
-            src={book.image}
-            alt={`Cover of ${book.title}`}
-            style={{ height: '300px', objectFit: 'contain' }}
-            className='mt-3'
-          />
-        )}
-        <Card.Body>
-          <Card.Title className='fs-1'>{book.title}</Card.Title>
-          <Card.Subtitle className='mb-3 text-muted fs-5'>
-            {book.author}
-          </Card.Subtitle>
-          <Card.Text className='fs-5'>{book.description}</Card.Text>
+    <div className='page'>
+      <button type='button' className={styles.back} onClick={() => navigate(-1)}>
+        <ArrowLeftIcon width={16} height={16} />
+        Back
+      </button>
 
-          <Button
-            variant='link'
-            onClick={toggleLike}
-            disabled={saving}
-            aria-pressed={liked}
-            className='mb-3'
+      <AsyncState loading={loading} error={error} isEmpty={false}>
+        {book && (
+          <article
+            className={styles.layout}
+            style={{ '--cloth': spineColor(book.title) }}
           >
-            {liked ? (
-              <FaHeart color='red' size={28} />
-            ) : (
-              <FaRegHeart color='grey' size={28} />
-            )}
-          </Button>
-
-          {error && (
-            <Alert variant='warning' dismissible onClose={() => setError('')}>
-              {error}
-            </Alert>
-          )}
-
-          <hr />
-
-          <h5 className='mb-3'>Comments</h5>
-          {book.comments?.length > 0 ? (
-            <ListGroup className='mb-3'>
-              {book.comments.map((comment, index) => (
-                <ListGroup.Item key={index}>{comment}</ListGroup.Item>
-              ))}
-            </ListGroup>
-          ) : (
-            <p className='text-muted'>No comments yet.</p>
-          )}
-
-          <Form onSubmit={handleAddComment} className='mb-3'>
-            <Form.Group controlId='comment' className='mb-3'>
-              <Form.Control
-                type='text'
-                placeholder='Write your comment...'
-                value={newComment}
-                onChange={(event) => setNewComment(event.target.value)}
+            <div className={styles.aside}>
+              <div className={styles.coverFrame}>
+                <Cover
+                  src={book.image}
+                  title={book.title}
+                  author={book.author}
+                  tall
+                />
+              </div>
+              <button
+                type='button'
+                className={`${styles.like} ${liked ? styles.liked : ''}`}
+                onClick={toggleLike}
                 disabled={saving}
-              />
-            </Form.Group>
-            <Button
-              variant='primary'
-              type='submit'
-              disabled={saving || !newComment.trim()}
-            >
-              {saving ? 'Saving...' : 'Add Comment'}
-            </Button>
-          </Form>
+                aria-pressed={liked}
+              >
+                <HeartIcon filled={liked} width={18} height={18} />
+                {liked ? 'Liked' : 'Like this book'}
+              </button>
+            </div>
 
-          <Button variant='outline-secondary' onClick={() => navigate(-1)}>
-            Go Back
-          </Button>
-        </Card.Body>
-      </Card>
-    </Container>
+            <div>
+              <h1 className={styles.title}>{book.title}</h1>
+              <p className={styles.author}>{book.author}</p>
+              <div className={styles.rule} />
+              <p className={styles.description}>{book.description}</p>
+
+              <section className={styles.notes}>
+                <div className={styles.notesHead}>
+                  <h2 className={styles.notesTitle}>Your notes</h2>
+                  {notes.length > 0 && (
+                    <span className={styles.notesCount}>
+                      {notes.length} so far
+                    </span>
+                  )}
+                </div>
+
+                {writeError && (
+                  <div className={styles.notice}>
+                    <Notice variant='warning' onDismiss={() => setWriteError('')}>
+                      {writeError}
+                    </Notice>
+                  </div>
+                )}
+
+                {notes.length > 0 ? (
+                  <ul className={styles.noteList}>
+                    {notes.map((note, index) => (
+                      <li key={`${index}-${note}`} className={styles.note}>
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.noNotes}>
+                    Nothing written down yet. Anything you note here stays with
+                    the book.
+                  </p>
+                )}
+
+                <form className={styles.form} onSubmit={addNote}>
+                  <div className={styles.formField}>
+                    <TextField
+                      label='Write a note about this book'
+                      placeholder='What did you take from it?'
+                      value={newNote}
+                      onChange={(event) => setNewNote(event.target.value)}
+                      disabled={saving}
+                    />
+                  </div>
+                  <Button
+                    type='submit'
+                    variant='primary'
+                    disabled={saving || !newNote.trim()}
+                  >
+                    {saving ? 'Saving' : 'Add note'}
+                  </Button>
+                </form>
+              </section>
+            </div>
+          </article>
+        )}
+      </AsyncState>
+    </div>
   );
 }
 

@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Alert, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
 
 import AsyncState from '../components/AsyncState';
 import BookCard from '../components/BookCard';
+import BookGrid from '../components/BookGrid';
+import Button from '../ui/Button';
+import Notice from '../ui/Notice';
+import PageHeader from '../ui/PageHeader';
+import Toolbar, { ToolbarControl, ToolbarSearch } from '../ui/Toolbar';
+import { SearchField, SelectField } from '../ui/Field';
 import { describeError, isCanceled, listItems, updateItem } from '../api/client';
+import { plural } from '../lib/words';
 
 /** Searching and sorting are done by the API, not in the browser. */
 const SORTS = {
-  title: { label: 'Title (A-Z)', params: { _sort: 'title', _order: 'asc' } },
-  author: { label: 'Author (A-Z)', params: { _sort: 'author', _order: 'asc' } },
-  likes: { label: 'Most liked', params: { _sort: 'likes', _order: 'desc' } },
+  title: { label: 'By title', params: { _sort: 'title', _order: 'asc' } },
+  author: { label: 'By author', params: { _sort: 'author', _order: 'asc' } },
+  likes: { label: 'Liked first', params: { _sort: 'likes', _order: 'desc' } },
 };
 
 function Books() {
@@ -48,7 +53,7 @@ function Books() {
         setTotal(total);
       } catch (err) {
         if (isCanceled(err)) return;
-        setError(describeError(err, 'Could not load the books.'));
+        setError(describeError(err, 'Could not load the catalog.'));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -75,69 +80,76 @@ function Books() {
     }
   };
 
-  return (
-    <Container className='mt-5'>
-      <h1 className='text-center fs-1 mb-2'>My Books</h1>
-      <p className='text-center fs-4 text-muted mb-4'>
-        {total} {total === 1 ? 'book' : 'books'} in the catalog
-      </p>
+  // While a search is on, the header says how much of the catalog is showing.
+  const count = query
+    ? `${books.length} of ${total} ${plural(total, 'book')}`
+    : `${total} ${plural(total, 'book')}`;
 
-      <Row className='mb-4 g-2'>
-        <Col md={8}>
-          <InputGroup>
-            <InputGroup.Text>
-              <FaSearch />
-            </InputGroup.Text>
-            <Form.Control
-              type='search'
-              placeholder='Search by title, author or description...'
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              aria-label='Search books'
-            />
-          </InputGroup>
-        </Col>
-        <Col md={4}>
-          <Form.Select
+  return (
+    <div className='page'>
+      <PageHeader title='Catalog' count={loading ? null : count}>
+        The books kept in the library itself. Search runs on the server, across
+        titles, authors and descriptions.
+      </PageHeader>
+
+      <Toolbar>
+        <ToolbarSearch>
+          <SearchField
+            label='Search the catalog'
+            placeholder='Search by title, author or description'
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </ToolbarSearch>
+        <ToolbarControl>
+          <SelectField
+            label='Order the catalog'
             value={sort}
             onChange={(event) => setSort(event.target.value)}
-            aria-label='Sort books'
           >
             {Object.entries(SORTS).map(([value, { label }]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
-          </Form.Select>
-        </Col>
-      </Row>
+          </SelectField>
+        </ToolbarControl>
+      </Toolbar>
 
       {writeError && (
-        <Alert variant='warning' dismissible onClose={() => setWriteError('')}>
+        <Notice variant='warning' onDismiss={() => setWriteError('')}>
           {writeError}
-        </Alert>
+        </Notice>
       )}
 
       <AsyncState
         loading={loading}
         error={error}
         isEmpty={books.length === 0}
-        emptyText={query ? 'No book matches that search.' : 'The catalog is empty.'}
+        emptyText={
+          query
+            ? `Nothing in the catalog matches “${query}”.`
+            : 'The catalog is empty.'
+        }
+        emptyAction={
+          query && (
+            <Button onClick={() => setSearch('')}>Clear the search</Button>
+          )
+        }
       >
-        <Row>
+        <BookGrid>
           {books.map((book) => (
-            <Col md={4} className='d-flex align-items-stretch mb-4' key={book.id}>
-              <BookCard
-                book={book}
-                detailsTo={`/books/${book.id}`}
-                onToggleLike={toggleLike}
-                busy={busyId === book.id}
-              />
-            </Col>
+            <BookCard
+              key={book.id}
+              book={book}
+              detailsTo={`/books/${book.id}`}
+              onToggleLike={toggleLike}
+              busy={busyId === book.id}
+            />
           ))}
-        </Row>
+        </BookGrid>
       </AsyncState>
-    </Container>
+    </div>
   );
 }
 

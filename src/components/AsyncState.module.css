@@ -1,0 +1,63 @@
+.state {
+  display: grid;
+  gap: var(--s-3);
+  padding-block: var(--s-8);
+  max-width: var(--measure);
+}
+
+.line {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+/* The one piece of motion that runs without being asked for: it is the only
+   way to say the request is still in flight. */
+.track {
+  position: relative;
+  width: 12rem;
+  height: 2px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.track::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  width: 40%;
+  background: var(--foil);
+  animation: sweep 1.4s var(--ease) infinite;
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(350%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track::after {
+    animation: none;
+    width: 100%;
+    opacity: 0.4;
+  }
+}
+
+.empty {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  padding-block: var(--s-8);
+  max-width: var(--measure);
+}
+
+.emptyText {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 400;
+  font-variation-settings: 'WONK' 1;
+  line-height: var(--lh-snug);
+}

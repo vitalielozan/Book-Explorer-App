@@ -1,0 +1,55 @@
+/* Same device as a book spine: a band of colour on the left edge carries the
+   meaning, so the message itself stays on plain board. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  background: var(--board);
+  border: 1px solid var(--rule);
+  border-left-width: 4px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.info {
+  border-left-color: var(--indigo);
+}
+
+.success {
+  border-left-color: var(--bottle);
+}
+
+.warning {
+  border-left-color: var(--ochre);
+}
+
+.danger {
+  border-left-color: var(--oxblood);
+}
+
+.dismiss {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.25rem -0.4rem -0.25rem 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.dismiss:hover {
+  color: var(--ink);
+}

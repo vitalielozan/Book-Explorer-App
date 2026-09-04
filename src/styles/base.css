@@ -1,0 +1,139 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--fs-md);
+  font-optical-sizing: auto;
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-color: var(--foil);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+hr {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* One focus treatment everywhere: a foil rule offset from the element. */
+:focus-visible {
+  outline: 2px solid var(--foil);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: var(--ochre-wash);
+}
+
+.page {
+  width: 100%;
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--s-5);
+}
+
+@media (max-width: 40rem) {
+  .page {
+    padding-inline: var(--s-4);
+  }
+}
+
+/* Visible only to screen readers, until focused. */
+.skip-link {
+  position: fixed;
+  top: var(--s-3);
+  left: var(--s-3);
+  z-index: 100;
+  padding: var(--s-2) var(--s-4);
+  background: var(--ink);
+  color: var(--board);
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Keeps the footer at the bottom of short pages. */
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.shell > main {
+  flex: 1;
+}

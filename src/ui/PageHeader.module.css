@@ -1,0 +1,39 @@
+.header {
+  display: grid;
+  gap: var(--s-3);
+  padding-block: var(--s-7) var(--s-5);
+  border-bottom: 1px solid var(--rule);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.title {
+  font-size: var(--fs-3xl);
+  font-weight: 500;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+}
+
+.count {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  /* Sits on the same baseline as the title, so it reads as part of the line. */
+  white-space: nowrap;
+}
+
+.lead {
+  max-width: var(--measure);
+  color: var(--ink-2);
+  font-size: var(--fs-md);
+}
+
+@media (max-width: 40rem) {
+  .header {
+    padding-block: var(--s-6) var(--s-4);
+  }
+}

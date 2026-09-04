@@ -1,0 +1,62 @@
+.footer {
+  margin-top: var(--s-9);
+  border-top: 1px solid var(--rule);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  gap: var(--s-6);
+  padding-block: var(--s-6) var(--s-7);
+}
+
+.about {
+  max-width: 34ch;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.name {
+  display: block;
+  margin-bottom: var(--s-2);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-variation-settings: 'WONK' 1;
+}
+
+.heading {
+  margin-bottom: var(--s-3);
+  font-family: var(--font-text);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.list {
+  display: grid;
+  gap: var(--s-2);
+  font-size: var(--fs-sm);
+}
+
+.list a {
+  color: var(--ink-2);
+}
+
+.list a:hover {
+  color: var(--ink);
+}
+
+.github {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+@media (max-width: 46rem) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+  }
+}

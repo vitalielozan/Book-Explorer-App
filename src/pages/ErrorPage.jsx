@@ -1,24 +1,36 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
-const ErrorPage = () => {
+import Button from '../ui/Button';
+import styles from './ErrorPage.module.css';
+
+function ErrorPage() {
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
-      <h1 className="display-1 text-danger">Oops!</h1>
-      <p className="lead text-center">
-        The page you're looking for doesn't exist...
-      </p>
-      <button className="btn btn-primary mt-3" onClick={handleGoBack}>
-        Go Back
-      </button>
+    <div className='page'>
+      <div className={styles.wrap}>
+        <div className={styles.gap} aria-hidden='true'>
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+
+        <h1 className={styles.title}>That book is not on the shelf.</h1>
+        <p className={styles.text}>
+          The address you followed does not match anything in the catalog or on
+          your shelf. It may have been removed, or the link may be wrong.
+        </p>
+
+        <div className={styles.actions}>
+          <Button as={Link} to='/books' variant='primary'>
+            Open the catalog
+          </Button>
+          <Button onClick={() => navigate(-1)}>Go back</Button>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default ErrorPage;

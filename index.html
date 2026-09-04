@@ -1,14 +1,33 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/react.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book Explorer</title>
-</head>
-<div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
-</body>
+    <title>Book Explorer — a reading catalog</title>
+    <meta
+      name="description"
+      content="Search a curated book catalog, pull in new titles from Open Library, and keep notes on what you read."
+    />
+    <meta name="theme-color" content="#e7e6e1" />
+    <meta name="color-scheme" content="light" />
 
+    <!--
+      Fraunces sets the display: an old-style face with an optical-size axis,
+      which is what a page built out of book titles needs. Literata carries the
+      reading text; it was drawn for long-form reading on screen.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,400..600&display=swap"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

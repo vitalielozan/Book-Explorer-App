@@ -1,0 +1,126 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  min-height: 4rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  font-variation-settings: 'WONK' 1;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+/* The mark is three books seen spine-on, in three of the binding cloths. */
+.mark {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1.1rem;
+}
+
+.mark span {
+  width: 3px;
+  border-radius: 1px;
+}
+
+.mark span:nth-child(1) {
+  height: 100%;
+  background: var(--spine-1);
+}
+
+.mark span:nth-child(2) {
+  height: 78%;
+  background: var(--spine-2);
+}
+
+.mark span:nth-child(3) {
+  height: 92%;
+  background: var(--spine-4);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+
+.link {
+  padding-block: 0.35rem;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.link:hover {
+  color: var(--ink);
+}
+
+/* Where you are is stamped in foil; nothing else on the bar carries colour. */
+.active {
+  color: var(--ink);
+  border-bottom-color: var(--foil);
+}
+
+.toggle {
+  display: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: -0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 46rem) {
+  .toggle {
+    display: grid;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .navOpen {
+    display: flex;
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--s-2) var(--s-4) var(--s-4);
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .navOpen .link {
+    padding-block: var(--s-3);
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--fs-md);
+  }
+
+  .navOpen .active {
+    border-bottom-color: var(--foil);
+  }
+}

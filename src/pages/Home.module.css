@@ -1,0 +1,166 @@
+.hero {
+  display: grid;
+  gap: var(--s-5);
+  padding-block: var(--s-9) 0;
+}
+
+.headline {
+  max-width: 14ch;
+  font-size: var(--fs-hero);
+  font-weight: 400;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  max-width: 46ch;
+  color: var(--ink-2);
+  font-size: var(--fs-lg);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+/**
+ * The shelf: the catalog itself, seen the way books are seen when they are put
+ * away. Each band is one real record, dyed and sized from its own title.
+ */
+.shelf {
+  margin-top: var(--s-7);
+}
+
+.spines {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 15rem;
+  overflow-x: auto;
+  padding-bottom: 1px;
+  scrollbar-width: thin;
+}
+
+.spine {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--s-3);
+  background: var(--cloth);
+  border-radius: 2px 2px 0 0;
+  color: #f2efe8;
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease);
+}
+
+/* Pulling a book part-way out is the answer to pointing at it. */
+.spine:hover,
+.spine:focus-visible {
+  transform: translateY(-10px);
+}
+
+.spineTitle {
+  writing-mode: vertical-rl;
+  max-height: 100%;
+  padding-inline: 1px;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: var(--fs-3xs);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Foil bands near the head and tail, the way a spine is stamped. */
+.spine::before,
+.spine::after {
+  content: '';
+  position: absolute;
+  inset-inline: 3px;
+  height: 1px;
+  background: var(--foil);
+  opacity: 0.6;
+}
+
+.spine::before {
+  top: 8px;
+}
+
+.spine::after {
+  bottom: 8px;
+}
+
+.board {
+  height: 4px;
+  background: var(--rule-strong);
+  border-radius: 0 0 2px 2px;
+}
+
+.shelfCaption {
+  margin-top: var(--s-3);
+  color: var(--ink-3);
+  font-size: var(--fs-2xs);
+}
+
+.waiting {
+  display: flex;
+  align-items: flex-end;
+  height: 15rem;
+  color: var(--ink-3);
+  font-size: var(--fs-sm);
+}
+
+/* Second band: what is actually on the reader's own shelf right now. */
+.section {
+  margin-top: var(--s-9);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--rule);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.sectionTitle {
+  font-size: var(--fs-2xl);
+  font-weight: 500;
+  font-variation-settings: 'WONK' 1;
+}
+
+.sectionLink {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+.recent {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--s-5);
+  margin-top: var(--s-5);
+}
+
+.invite {
+  max-width: var(--measure);
+  margin-top: var(--s-4);
+  color: var(--ink-2);
+}
+
+@media (max-width: 46rem) {
+  .hero {
+    padding-block: var(--s-7) 0;
+  }
+
+  .spines {
+    height: 12rem;
+  }
+}

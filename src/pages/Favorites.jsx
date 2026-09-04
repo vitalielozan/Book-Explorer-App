@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Alert, Col, Container, Row } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 import AsyncState from '../components/AsyncState';
 import BookCard from '../components/BookCard';
+import BookGrid from '../components/BookGrid';
+import Button from '../ui/Button';
+import Notice from '../ui/Notice';
+import PageHeader from '../ui/PageHeader';
 import {
   deleteItem,
   describeError,
@@ -10,6 +14,7 @@ import {
   listItems,
   updateItem,
 } from '../api/client';
+import { plural } from '../lib/words';
 
 /**
  * Books imported from Open Library. They live in the API's `favorites`
@@ -35,7 +40,7 @@ function Favorites() {
         setFavorites(items);
       } catch (err) {
         if (isCanceled(err)) return;
-        setError(describeError(err, 'Could not load your favorites.'));
+        setError(describeError(err, 'Could not load your shelf.'));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -69,46 +74,52 @@ function Favorites() {
       await deleteItem('favorites', book.id);
       setFavorites((current) => current.filter((item) => item.id !== book.id));
     } catch (err) {
-      setWriteError(describeError(err, 'Could not remove the book.'));
+      setWriteError(describeError(err, 'Could not take the book off the shelf.'));
     } finally {
       setBusyId(null);
     }
   };
 
+  const count = `${favorites.length} ${plural(favorites.length, 'book')}`;
+
   return (
-    <Container className='mt-5'>
-      <h1 className='text-center fs-1 mb-2'>Favorites</h1>
-      <p className='text-center fs-4 text-muted mb-4'>
-        Books you saved from Open Library
-      </p>
+    <div className='page'>
+      <PageHeader title='Your shelf' count={loading ? null : count}>
+        Everything you kept from Open Library. Removing a book takes it off the
+        shelf for good.
+      </PageHeader>
 
       {writeError && (
-        <Alert variant='warning' dismissible onClose={() => setWriteError('')}>
+        <Notice variant='warning' onDismiss={() => setWriteError('')}>
           {writeError}
-        </Alert>
+        </Notice>
       )}
 
       <AsyncState
         loading={loading}
         error={error}
         isEmpty={favorites.length === 0}
-        emptyText='No favorites yet. Head to Discover Books to save one.'
+        emptyText='Your shelf is empty.'
+        emptyAction={
+          <Button as={Link} to='/discover' variant='primary'>
+            Find a book to keep
+          </Button>
+        }
       >
-        <Row>
+        <BookGrid>
           {favorites.map((book) => (
-            <Col md={4} className='d-flex align-items-stretch mb-4' key={book.id}>
-              <BookCard
-                book={book}
-                detailsTo={`/favorites/${book.id}`}
-                onToggleLike={toggleLike}
-                onRemove={remove}
-                busy={busyId === book.id}
-              />
-            </Col>
+            <BookCard
+              key={book.id}
+              book={book}
+              detailsTo={`/favorites/${book.id}`}
+              onToggleLike={toggleLike}
+              onRemove={remove}
+              busy={busyId === book.id}
+            />
           ))}
-        </Row>
+        </BookGrid>
       </AsyncState>
-    </Container>
+    </div>
   );
 }
 
