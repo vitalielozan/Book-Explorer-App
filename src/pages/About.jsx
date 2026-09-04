@@ -108,7 +108,7 @@ function About() {
         <p className={styles.signoff}>
           Designed and built by Vitalie Lozan. The source is on{' '}
           <a
-            href='https://github.com/vitalielozan/Book-Explorer-App-ReactJS'
+            href='https://github.com/vitalielozan/Book-Explorer-App'
             target='_blank'
             rel='noopener noreferrer'
           >

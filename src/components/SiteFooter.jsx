@@ -55,7 +55,7 @@ function SiteFooter() {
             <li>
               <a
                 className={styles.github}
-                href='https://github.com/vitalielozan/Book-Explorer-App-ReactJS'
+                href='https://github.com/vitalielozan/Book-Explorer-App'
                 target='_blank'
                 rel='noopener noreferrer'
               >
